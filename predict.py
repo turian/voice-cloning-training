@@ -598,10 +598,11 @@ class Predictor(BasePredictor):
 
         log_zip_file_path = os.path.join(base_dir, f"logs.zip")
         with ZipFile(log_zip_file_path, "w") as zipf:
-            for file in glob.glob(os.path.join("logs/**/*", recursive=True)):
+            for file in glob.glob("logs/**/*", recursive=True):
                 if os.path.exists(file) and os.path.isfile(file):
                     print(f"Adding file: {file}")
-                    zipf.write(file, arcname=os.path.basename(file))
+                    #zipf.write(file, arcname=os.path.basename(file))
+                    zipf.write(file, arcname=file)
                 else:
                     print(f"File not found: {file}")
         print(f"Log zip file path: {log_zip_file_path}")

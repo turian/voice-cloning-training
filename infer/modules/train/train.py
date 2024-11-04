@@ -115,6 +115,7 @@ def main():
     for i in range(n_gpus):
         children[i].join()
 
+BEST_LOSS_GEN_ALL = 1e8
 
 def run(
     rank,
@@ -267,6 +268,8 @@ def run(
 
     cache = []
     for epoch in range(epoch_str, hps.train.epochs + 1):
+        global BEST_LOSS_GEN_ALL
+        BEST_LOSS_GEN_ALL = 1e8
         if rank == 0:
             train_and_evaluate(
                 rank,
@@ -398,7 +401,6 @@ def train_and_evaluate(
 
     # Run steps
     epoch_recorder = EpochRecorder()
-    BEST_LOSS_GEN_ALL = 1e8
     for batch_idx, info in data_iterator:
         # Data
         ## Unpack

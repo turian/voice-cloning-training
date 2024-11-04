@@ -398,6 +398,7 @@ def train_and_evaluate(
 
     # Run steps
     epoch_recorder = EpochRecorder()
+    BEST_LOSS_GEN_ALL = 1e8
     for batch_idx, info in data_iterator:
         # Data
         ## Unpack
@@ -502,8 +503,13 @@ def train_and_evaluate(
         scaler.step(optim_g)
         scaler.update()
 
+        if loss_gen_all < BEST_LOSS_GEN_ALL:
+            BEST_LOSS_GEN_ALL = loss_gen_all
+            logger.info("New best loss_gen_all={loss_gen_all:.3f} at global_step {global_step}, epoch {epoch}, " + "[{:.0f}%]".format(100.0 * batch_idx / len(train_loader)))
+
         if rank == 0:
-            if global_step % hps.train.log_interval == 0:
+            #if global_step % hps.train.log_interval == 0:
+            if global_step % 10 == 0:
                 lr = optim_g.param_groups[0]["lr"]
                 logger.info(
                     "Train Epoch: {} [{:.0f}%]".format(
@@ -518,7 +524,7 @@ def train_and_evaluate(
 
                 logger.info([global_step, lr])
                 logger.info(
-                    f"loss_disc={loss_disc:.3f}, loss_gen={loss_gen:.3f}, loss_fm={loss_fm:.3f},loss_mel={loss_mel:.3f}, loss_kl={loss_kl:.3f}"
+                    f"loss_gen_all={loss_gen_all:.3f}, loss_disc={loss_disc:.3f}, loss_gen={loss_gen:.3f}, loss_fm={loss_fm:.3f},loss_mel={loss_mel:.3f}, loss_kl={loss_kl:.3f}"
                 )
                 scalar_dict = {
                     "loss/g/total": loss_gen_all,

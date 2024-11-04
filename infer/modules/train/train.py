@@ -267,6 +267,7 @@ def run(
     scaler = GradScaler(enabled=hps.train.fp16_run)
 
     cache = []
+    # TODO: Shouldn't use global, and only do this on rank == 0
     global BEST_LOSS_GEN_ALL
     BEST_LOSS_GEN_ALL = 1e8
     for epoch in range(epoch_str, hps.train.epochs + 1):
@@ -505,6 +506,7 @@ def train_and_evaluate(
         scaler.step(optim_g)
         scaler.update()
 
+        # TODO: Shouldn't use global, and only do this on rank == 0
         global BEST_LOSS_GEN_ALL
         if loss_gen_all < BEST_LOSS_GEN_ALL:
             BEST_LOSS_GEN_ALL = loss_gen_all

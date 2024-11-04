@@ -459,7 +459,7 @@ class Predictor(BasePredictor):
         ),
         epoch: int = Input(description="Epoch", default=10),
         batch_size: str = Input(description="Batch size", default="7"),
-    ) -> CogPath:
+    ) -> list[CogPath]:
         self.delete_old_files()
 
         dataset_path = str(dataset_zip)
@@ -595,4 +595,16 @@ class Predictor(BasePredictor):
                 print(f"File not found: {exp_file}")
 
         print(f"Zip file path: {zip_file_path}")
-        return CogPath(zip_file_path)
+
+        print(f"Log zip file path: {log_zip_file_path}")
+        log_zip_file_path = os.path.join(base_dir, f"logs.zip")
+        with ZipFile(log_zip_file_path, "w") as zipf:
+            for file in glob.glob(os.path.join("logs/**/*", recursive=True)):
+                if os.path.exists(file) and os.path.isfile(file):
+                    print(f"Adding file: {file}")
+                    zipf.write(file, arcname=os.path.basename(file))
+                else:
+                    print(f"File not found: {file}")
+        print(f"Log zip file path: {log_zip_file_path}")
+
+        return [CogPath(zip_file_path), CogPath(log_zip_file_path)]

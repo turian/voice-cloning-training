@@ -505,7 +505,7 @@ def train_and_evaluate(
 
         if loss_gen_all < BEST_LOSS_GEN_ALL:
             BEST_LOSS_GEN_ALL = loss_gen_all
-            logger.info("New best loss_gen_all={loss_gen_all:.3f} at global_step {global_step}, epoch {epoch}, " + "[{:.0f}%]".format(100.0 * batch_idx / len(train_loader)))
+            logger.info(f"New best loss_gen_all={loss_gen_all:.3f} at global_step {global_step}, epoch {epoch}, " + "[{:.0f}%]".format(100.0 * batch_idx / len(train_loader)))
 
         if rank == 0:
             #if global_step % hps.train.log_interval == 0:

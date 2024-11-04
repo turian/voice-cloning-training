@@ -596,7 +596,6 @@ class Predictor(BasePredictor):
 
         print(f"Zip file path: {zip_file_path}")
 
-        print(f"Log zip file path: {log_zip_file_path}")
         log_zip_file_path = os.path.join(base_dir, f"logs.zip")
         with ZipFile(log_zip_file_path, "w") as zipf:
             for file in glob.glob(os.path.join("logs/**/*", recursive=True)):
